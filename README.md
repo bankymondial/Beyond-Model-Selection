@@ -22,6 +22,6 @@ This repository hosts the Markdown version of the article for **GitHub Pages**. 
 If you found this article useful, feel free to connect with me:  
 - **GitHub:** [@bankymondial](https://github.com/bankymondial)  
 - **LinkedIn:** [@obanky](www.linkedin.com/in/obanky)  
-- **Twitter/X:** [@olaide_banky]  
+- **Twitter/X:** (@olaide_banky)  
 
 Happy learning! 🚀  

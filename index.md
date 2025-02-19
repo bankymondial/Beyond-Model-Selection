@@ -1,120 +1,113 @@
-While participating in the four-month-long free online course in Machine Learning Zoomcamp delivered by DataTalks, I learned that as an ML practitioner, a significant portion of the work is not just about selecting the right model but about constructing datasets and performing feature engineering.
+---
 
-The process of exploring, describing, and analyzing datasets reveals inadequacies in data quality, which must be addressed before training a model. Nothing beats a high-quality dataset.
+# Beyond Model Selection: Exploring Normalization and Feature Engineering  
 
-During the course, model selection depended on the nature of the target variable:
-	•	Regression models predicted continuous values (e.g., house prices).
-	•	Classification models determined categorical outcomes (e.g., whether a student gets admitted to college based on academic and extracurricular characteristics).
-	•	Neural networks tackled more complex tasks, such as image classification.
+While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that as an ML practitioner, a significant portion of time is spent constructing datasets and performing feature engineering. The process of exploring, describing, and analyzing datasets reveals inadequacies that must be addressed to improve data quality. Nothing beats a high-quality dataset.  
 
-We explored models such as logistic regression, decision trees, random forests, gradient boosting, and XGBoost, fine-tuning their parameters to improve performance.
+During the course, model selection depended on the **nature of the target variable**:  
+- A **regression model** fits a **quantitative target** (e.g., predicting house prices).  
+- A **classification model** determines categorical outcomes (e.g., predicting whether a student gets admitted to college based on academic and extracurricular characteristics).  
+- A **neural network** solves problems such as **image classification**.  
 
-However, two key aspects stood out to me beyond the core curriculum, which I want to highlight:
+The models covered in the course included **logistic regression, decision trees, random forests, gradient boosting, and XGBoost**, with a focus on tuning hyperparameters to optimize performance.  
 
-1. The Importance of Normalization in Model Performance
+However, two aspects stood out as areas worth deeper exploration: **normalization in machine learning** and **feature engineering strategies**.
 
-During training, I realized that not all models require feature scaling. However, for some models, failing to normalize the data can lead to poor performance or misleading coefficients.
+---
 
-When Should You Normalize Data?
+## 🔹 The Role of Normalization in Machine Learning  
 
-Feature scaling (such as standardization or min-max scaling) is especially important when using:
-✅ K-Nearest Neighbors (KNN) – Distance-based models can be skewed by unscaled features.
+When working with machine learning models, feature scaling plays a crucial role. Some models can handle **unnormalized data**, while others perform significantly better with **normalized** features.  
 
-✅ Support Vector Machines (SVM) – A large range of feature values affects how the margin is calculated.
+**Which models require normalization?**  
 
-✅ Neural Networks – Can struggle with unnormalized inputs, leading to slower convergence.
+- **Do not require normalization:**  
+  - Decision Trees  
+  - Random Forests  
+  - Gradient Boosting Machines (GBM, XGBoost, LightGBM, CatBoost)  
+  - Logistic Regression and Linear Regression *(without regularization)*  
 
-✅ Linear & Logistic Regression (with Regularization) – Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.
+- **Require normalization for optimal performance:**  
+  - K-Nearest Neighbors (KNN)  
+  - Support Vector Machines (SVM)  
+  - Neural Networks  
+  - Logistic Regression and Linear Regression *(with regularization, e.g., Lasso, Ridge)*  
 
-Meanwhile, models such as decision trees, random forests, and gradient boosting do not require normalization since they split data based on feature values, not distances.
+### 🔹 Example: The Effect of Normalization  
 
-Code Example: The Impact of Normalization on Logistic Regression
+Let’s consider a dataset where feature values differ in scale:  
 
-Below is a simple example demonstrating how failing to normalize data can impact logistic regression performance when regularization is applied.
-
+```python
 import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
-# Generate synthetic dataset
-np.random.seed(42)
-X = np.random.rand(1000, 2) * [100, 1]  # One feature with a large range, one with a small range
-y = (X[:, 0] + X[:, 1] > 50).astype(int)  # Simple threshold-based target
-
-# Split into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Train Logistic Regression without normalization
-model = LogisticRegression()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-print("Accuracy without normalization:", accuracy_score(y_test, y_pred))
-
-# Normalize features
+# Sample dataset with unnormalized features
+X = np.array([[1, 200], [2, 300], [3, 400]])
 scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+X_scaled = scaler.fit_transform(X)
 
-# Train Logistic Regression with normalization
-model_scaled = LogisticRegression()
-model_scaled.fit(X_train_scaled, y_train)
-y_pred_scaled = model_scaled.predict(X_test_scaled)
-print("Accuracy with normalization:", accuracy_score(y_test, y_pred_scaled))
+print("Original Data:\n", X)
+print("Normalized Data:\n", X_scaled)
 
-Observations:
-	•	Without normalization, the model struggles to assign balanced weights to features.
-	•	After normalization, regularization techniques work as intended, leading to improved accuracy.
+Without normalization, models like SVM or KNN may give more weight to larger-scale features, leading to biased learning. Normalization ensures equal contribution from all features, improving performance and interpretability.
 
-This experiment highlights why normalization is critical for models using regularization.
+🔹 Feature Engineering: Finding the Right Features
 
-2. The Art of Feature Engineering & Feature Selection
+Feature engineering is one of the most challenging and rewarding parts of training a model. Adding irrelevant features can introduce noise and reduce model performance.
 
-Another major takeaway was feature selection—how do you determine which features to include in a model?
+How do we select the most important features?
 
-While it might seem logical to include as many features as possible, irrelevant or redundant features can degrade model performance. Instead, it’s useful to:
-✅ Start with feature importance scores (e.g., from decision trees).
-✅ Train a baseline model with the most important features.
-✅ Gradually add features and track performance metrics (e.g., ROC AUC, Recall, Precision).
-
-Mini Case Study: Feature Engineering in Action
-
-Imagine we’re predicting whether a student will be placed in a job based on academic and extracurricular characteristics.
-
-We have:
-	•	Numerical features: GPA, internship hours, project count.
-	•	Categorical features: Participation in extracurricular activities (yes/no).
-
-A naive approach might involve feeding raw data into a model. However, domain knowledge suggests that combining certain features might improve predictive power.
-
-Feature Interaction: Creating a New Feature
-
-By crossing features, we can create new, meaningful variables. Here, we introduce a new feature:
-
-df['gpa_project_ratio'] = df['gpa'] / (df['project_count'] + 1)  # Avoid division by zero
-
-This GPA-to-Project ratio captures how well students balance academics with practical experience.
-
-Evaluating Feature Importance
-
-To determine if our new feature is valuable, we can use Random Forest feature importance:
+One approach is using feature importance scores from tree-based models:
 
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
 
-X = df.drop(columns=['placement_status'])  # Exclude target variable
-y = df['placement_status']
+# Generate a sample dataset
+X, y = make_classification(n_samples=100, n_features=5, random_state=42)
 
-model = RandomForestClassifier()
-model.fit(X, y)
+# Train a Random Forest model
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X, y)
 
-# Get feature importance scores
-importances = pd.Series(model.feature_importances_, index=X.columns).sort_values(ascending=False)
-print(importances)
+# Extract feature importance
+importances = rf.feature_importances_
+print("Feature Importances:", importances)
 
-If the gpa_project_ratio has high importance, we keep it. Otherwise, we remove it.
+A baseline model can be trained using only the most important features, and additional features can be added iteratively to check for improvements in performance metrics like ROC AUC, Recall, Precision, and F1-score.
 
-# Final Thoughts
+🔹 Feature Crossing: Combining Features for Better Insights
 
-Through this journey, I’ve come to appreciate data preprocessing, normalization, and feature engineering as critical steps in model performance. While model selection is important, garbage in, garbage out still applies—quality data leads to quality models.
+Sometimes, new features can be derived by combining existing ones. This is known as feature crossing, where domain knowledge plays a crucial role.
+
+For example, in an admission prediction model, instead of considering GPA and extracurriculars separately, we might create a new feature:
+
+import pandas as pd
+
+# Sample student data
+df = pd.DataFrame({
+    'GPA': [3.2, 3.8, 3.5],
+    'Extracurriculars': [1, 0, 1]  # 1 = Yes, 0 = No
+})
+
+# Creating a feature that combines both factors
+df['GPA_Extracurriculars'] = df['GPA'] * (df['Extracurriculars'] + 1)
+
+print(df)
+
+Feature crossing can improve model interpretability and performance, especially when the right domain knowledge is applied.
+
+🔹 Observations
+	•	Normalization is crucial for models that rely on distance-based calculations, ensuring features contribute equally.
+	•	Feature engineering can make or break a model’s success.
+	•	Feature importance analysis helps prioritize useful features while removing irrelevant ones.
+	•	Feature crossing leverages relationships between variables for better predictive power.
+
+Exploring these aspects has deepened my understanding of how to optimize models beyond just selecting algorithms.
+
+Would love to hear thoughts from fellow ML practitioners on their experiences with these techniques! 🚀
+
+🔗 Related Links
+	•	GitHub Repository: Beyond Model Selection
+	•	Live Blog Post: https://bankymondial.github.io/Beyond-Model-Selection/
+
+---

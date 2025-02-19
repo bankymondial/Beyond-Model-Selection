@@ -82,8 +82,8 @@ While it might seem logical to include as many features as possible, irrelevant 
 Imagine we’re predicting whether a student will be placed in a job based on academic and extracurricular characteristics.
 
 We have:
-	•	Numerical features: GPA, internship hours, project count.
-	•	Categorical features: Participation in extracurricular activities (yes/no).
+- Numerical features: GPA, internship hours, project count.
+- Categorical features: Participation in extracurricular activities (yes/no).
 
 A naive approach might involve feeding raw data into a model. However, domain knowledge suggests that combining certain features might improve predictive power.
 

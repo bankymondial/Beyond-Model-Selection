@@ -16,12 +16,11 @@ However, two key aspects stood out to me beyond the core curriculum, which I wan
 During training, I realized that not all models require feature scaling. However, for some models, failing to normalize the data can lead to poor performance or misleading coefficients.
 
 #### When Should You Normalize Data?
-
 Feature scaling (such as standardization or min-max scaling) is especially important when using:
-✅ K-Nearest Neighbors (KNN) – Distance-based models can be skewed by unscaled features.
-✅ Support Vector Machines (SVM) – A large range of feature values affects how the margin is calculated.
-✅ Neural Networks – Can struggle with unnormalized inputs, leading to slower convergence.
-✅ Linear & Logistic Regression (with Regularization) – Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.
+- K-Nearest Neighbors (KNN) – Distance-based models can be skewed by unscaled features.
+- Support Vector Machines (SVM) – A large range of feature values affects how the margin is calculated.
+- Neural Networks – Can struggle with unnormalized inputs, leading to slower convergence.
+- Linear & Logistic Regression (with Regularization) – Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.
 
 Meanwhile, models such as decision trees, random forests, and gradient boosting do not require normalization since they split data based on feature values, not distances.
 

@@ -61,3 +61,60 @@ model_scaled.fit(X_train_scaled, y_train)
 y_pred_scaled = model_scaled.predict(X_test_scaled)
 print("Accuracy with normalization:", accuracy_score(y_test, y_pred_scaled))
 ```
+
+#### Observations:
+- Without normalization, the model struggles to assign balanced weights to features.
+- After normalization, regularization techniques work as intended, leading to improved accuracy.
+
+This experiment highlights why normalization is critical for models using regularization.
+
+### 2. The Art of Feature Engineering & Feature Selection
+
+Another major takeaway was feature selection—how do you determine which features to include in a model?
+
+While it might seem logical to include as many features as possible, irrelevant or redundant features can degrade model performance. Instead, it’s useful to:
+- Start with feature importance scores (e.g., from decision trees).
+- Train a baseline model with the most important features.
+- Gradually add features and track performance metrics (e.g., ROC AUC, Recall, Precision).
+
+#### Mini Case Study: Feature Engineering in Action
+
+Imagine we’re predicting whether a student will be placed in a job based on academic and extracurricular characteristics.
+
+We have:
+	•	Numerical features: GPA, internship hours, project count.
+	•	Categorical features: Participation in extracurricular activities (yes/no).
+
+A naive approach might involve feeding raw data into a model. However, domain knowledge suggests that combining certain features might improve predictive power.
+
+#### Feature Interaction: Creating a New Feature
+
+By crossing features, we can create new, meaningful variables. Here, we introduce a new feature:
+
+`df['gpa_project_ratio'] = df['gpa'] / (df['project_count'] + 1)  # Avoid division by zero`
+
+This GPA-to-Project ratio captures how well students balance academics with practical experience.
+
+#### Evaluating Feature Importance
+
+To determine if our new feature is valuable, we can use Random Forest feature importance:
+
+```
+from sklearn.ensemble import RandomForestClassifier
+
+X = df.drop(columns=['placement_status'])  # Exclude target variable
+y = df['placement_status']
+
+model = RandomForestClassifier()
+model.fit(X, y)
+
+# Get feature importance scores
+importances = pd.Series(model.feature_importances_, index=X.columns).sort_values(ascending=False)
+print(importances)
+```
+
+If the gpa_project_ratio has high importance, we keep it. Otherwise, we remove it.
+
+### Final Thoughts
+
+Through this journey, I’ve come to appreciate data preprocessing, normalization, and feature engineering as critical steps in model performance. While model selection is important, garbage in, garbage out still applies—quality data leads to quality models.

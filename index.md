@@ -1,5 +1,3 @@
----
-
 # Beyond Model Selection: Exploring Normalization and Feature Engineering  
 
 While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that as an ML practitioner, a significant portion of time is spent constructing datasets and performing feature engineering. The process of exploring, describing, and analyzing datasets reveals inadequacies that must be addressed to improve data quality. Nothing beats a high-quality dataset.  

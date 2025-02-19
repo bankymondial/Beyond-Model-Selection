@@ -100,7 +100,6 @@ print(df)
 Feature crossing can improve model interpretability and performance, especially when the right domain knowledge is applied.
 
 ### Observations
-
 	•	Normalization is crucial for models that rely on distance-based calculations, ensuring features contribute equally.
 	•	Feature engineering can make or break a model’s success.
 	•	Feature importance analysis helps prioritize useful features while removing irrelevant ones.

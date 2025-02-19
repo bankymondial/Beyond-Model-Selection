@@ -1,9 +1,3 @@
----
-layout: default
-title: "Beyond Model Selection: Key Insights from My Machine Learning Journey"
-description: "A deep dive into normalization and feature engineering, two critical aspects often overlooked in machine learning courses."
----
-
 # **Beyond Model Selection: Key Insights from My Machine Learning Journey**  
 
 While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that a significant portion of an ML practitioner’s work isn’t just selecting the right model—it’s **constructing datasets and performing feature engineering**.  

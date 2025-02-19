@@ -1,3 +1,10 @@
+Here’s the index.md file formatted properly for GitHub Pages, ensuring that code snippets and text render correctly.
+
+---
+layout: default
+title: Beyond Model Selection: Exploring Normalization and Feature Engineering
+---
+
 # Beyond Model Selection: Exploring Normalization and Feature Engineering  
 
 While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that as an ML practitioner, a significant portion of time is spent constructing datasets and performing feature engineering. The process of exploring, describing, and analyzing datasets reveals inadequacies that must be addressed to improve data quality. Nothing beats a high-quality dataset.  
@@ -107,5 +114,3 @@ Would love to hear thoughts from fellow ML practitioners on their experiences wi
 🔗 Related Links
 	•	GitHub Repository: Beyond Model Selection
 	•	Live Blog Post: https://bankymondial.github.io/Beyond-Model-Selection/
-
----

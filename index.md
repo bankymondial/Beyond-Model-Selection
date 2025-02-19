@@ -28,3 +28,34 @@ Meanwhile, models such as decision trees, random forests, and gradient boosting 
 
 Below is a simple example demonstrating how failing to normalize data can impact logistic regression performance when regularization is applied.
 
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Generate synthetic dataset
+np.random.seed(42)
+X = np.random.rand(1000, 2) * [100, 1]  # One feature with a large range, one with a small range
+y = (X[:, 0] + X[:, 1] > 50).astype(int)  # Simple threshold-based target
+
+# Split into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Logistic Regression without normalization
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Accuracy without normalization:", accuracy_score(y_test, y_pred))
+
+# Normalize features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Train Logistic Regression with normalization
+model_scaled = LogisticRegression()
+model_scaled.fit(X_train_scaled, y_train)
+y_pred_scaled = model_scaled.predict(X_test_scaled)
+print("Accuracy with normalization:", accuracy_score(y_test, y_pred_scaled))

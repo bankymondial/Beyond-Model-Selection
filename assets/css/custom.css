@@ -1,9 +1,7 @@
-/* Increase base text size */
 body {
-    font-size: 18px; /* Default is around 16px, this makes it slightly larger */
+    font-size: 18px;
 }
 
-/* Adjust headers for better readability */
 h1 {
     font-size: 2em;
 }

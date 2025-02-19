@@ -1,10 +1,3 @@
-Here’s the index.md file formatted properly for GitHub Pages, ensuring that code snippets and text render correctly.
-
----
-layout: default
-title: Beyond Model Selection: Exploring Normalization and Feature Engineering
----
-
 # Beyond Model Selection: Exploring Normalization and Feature Engineering  
 
 While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that as an ML practitioner, a significant portion of time is spent constructing datasets and performing feature engineering. The process of exploring, describing, and analyzing datasets reveals inadequacies that must be addressed to improve data quality. Nothing beats a high-quality dataset.  
@@ -53,6 +46,7 @@ X_scaled = scaler.fit_transform(X)
 
 print("Original Data:\n", X)
 print("Normalized Data:\n", X_scaled)
+```
 
 Without normalization, models like SVM or KNN may give more weight to larger-scale features, leading to biased learning. Normalization ensures equal contribution from all features, improving performance and interpretability.
 
@@ -64,6 +58,7 @@ How do we select the most important features?
 
 One approach is using feature importance scores from tree-based models:
 
+```
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import make_classification
 
@@ -77,6 +72,7 @@ rf.fit(X, y)
 # Extract feature importance
 importances = rf.feature_importances_
 print("Feature Importances:", importances)
+```
 
 A baseline model can be trained using only the most important features, and additional features can be added iteratively to check for improvements in performance metrics like ROC AUC, Recall, Precision, and F1-score.
 
@@ -86,6 +82,7 @@ Sometimes, new features can be derived by combining existing ones. This is known
 
 For example, in an admission prediction model, instead of considering GPA and extracurriculars separately, we might create a new feature:
 
+```
 import pandas as pd
 
 # Sample student data
@@ -98,6 +95,7 @@ df = pd.DataFrame({
 df['GPA_Extracurriculars'] = df['GPA'] * (df['Extracurriculars'] + 1)
 
 print(df)
+```
 
 Feature crossing can improve model interpretability and performance, especially when the right domain knowledge is applied.
 

@@ -1,0 +1,119 @@
+---
+
+layout: post
+title: "Beyond Model Selection: Key Insights from My Machine Learning Journey"
+date: 2025-02-18
+categories: machine-learning feature-engineering data-preprocessing
+---
+
+<h1>Beyond Model Selection: Key Insights from My Machine Learning Journey</h1>
+
+<p>While participating in the four-month-long free online course in Machine Learning Zoomcamp delivered by DataTalks, I learned that as an ML practitioner, a significant portion of the work is not just about selecting the right model but about <strong>constructing datasets and performing feature engineering</strong>.</p>
+
+<p>The process of <strong>exploring, describing, and analyzing datasets</strong> reveals <strong>inadequacies in data quality</strong>, which must be addressed before training a model. Nothing beats a high-quality dataset.</p>
+
+<p>During the course, model selection depended on the <strong>nature of the target variable</strong>:</p>
+<ul>
+  <li><strong>Regression models</strong> predicted continuous values (e.g., house prices).</li>
+  <li><strong>Classification models</strong> determined categorical outcomes (e.g., whether a student gets admitted to college based on academic and extracurricular characteristics).</li>
+  <li><strong>Neural networks</strong> tackled more complex tasks, such as <strong>image classification</strong>.</li>
+</ul>
+
+<p>We explored models such as <strong>logistic regression, decision trees, random forests, gradient boosting, and XGBoost</strong>, fine-tuning their parameters to improve performance.</p>
+
+<p>However, two key aspects stood out to me beyond the core curriculum, which I want to highlight:</p>
+
+<h2>1. The Importance of Normalization in Model Performance</h2>
+
+<p>During training, I realized that <strong>not all models require feature scaling</strong>. However, for some models, failing to normalize the data can <strong>lead to poor performance or misleading coefficients</strong>.</p>
+
+<h3>When Should You Normalize Data?</h3>
+<p>Feature scaling (such as standardization or min-max scaling) is especially important when using:</p>
+<ul>
+  <li>âœ… <strong>K-Nearest Neighbors (KNN)</strong> â€“ Distance-based models can be skewed by unscaled features.</li>
+  <li>âœ… <strong>Support Vector Machines (SVM)</strong> â€“ A large range of feature values affects how the margin is calculated.</li>
+  <li>âœ… <strong>Neural Networks</strong> â€“ Can struggle with unnormalized inputs, leading to slower convergence.</li>
+  <li>âœ… <strong>Linear & Logistic Regression (with Regularization)</strong> â€“ Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.</li>
+</ul>
+
+<p>Meanwhile, models such as <strong>decision trees, random forests, and gradient boosting</strong> do <strong>not</strong> require normalization since they split data based on feature values, not distances.</p>
+
+<h3>Code Example: The Impact of Normalization on Logistic Regression</h3>
+
+<p>Below is a simple example demonstrating <strong>how failing to normalize data can impact logistic regression performance</strong> when regularization is applied.</p>
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Generate synthetic dataset
+np.random.seed(42)
+X = np.random.rand(1000, 2) * [100, 1]  # One feature with a large range, one with a small range
+y = (X[:, 0] + X[:, 1] > 50).astype(int)  # Simple threshold-based target
+
+# Split into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Logistic Regression without normalization
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Accuracy without normalization:", accuracy_score(y_test, y_pred))
+
+# Normalize features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Train Logistic Regression with normalization
+model_scaled = LogisticRegression()
+model_scaled.fit(X_train_scaled, y_train)
+y_pred_scaled = model_scaled.predict(X_test_scaled)
+print("Accuracy with normalization:", accuracy_score(y_test, y_pred_scaled))
+<h3>Observations:</h3>
+<ul>
+  <li>Without normalization, the model <strong>struggles to assign balanced weights</strong> to features.</li>
+  <li>After normalization, <strong>regularization techniques work as intended</strong>, leading to improved accuracy.</li>
+</ul>
+<p>This experiment highlights why <strong>normalization is critical for models using regularization.</strong></p>
+<h2>2. The Art of Feature Engineering & Feature Selection</h2>
+<p>Another major takeaway was <strong>feature selection</strong>â€”how do you determine which features to include in a model?</p>
+<p>While it might seem logical to include <strong>as many features as possible</strong>, <strong>irrelevant or redundant features can degrade model performance</strong>. Instead, itâ€™s useful to:</p>
+<ul>
+  <li>âœ… Start with <strong>feature importance scores</strong> (e.g., from decision trees).</li>
+  <li>âœ… Train a <strong>baseline model</strong> with the most important features.</li>
+  <li>âœ… Gradually <strong>add features and track performance metrics</strong> (e.g., ROC AUC, Recall, Precision).</li>
+</ul>
+<h3>Mini Case Study: Feature Engineering in Action</h3>
+<p>Imagine we're predicting <strong>whether a student will be placed in a job</strong> based on academic and extracurricular characteristics.</p>
+<p>We have:</p>
+<ul>
+  <li><strong>Numerical features:</strong> GPA, internship hours, project count.</li>
+  <li><strong>Categorical features:</strong> Participation in extracurricular activities (<code>yes/no</code>).</li>
+</ul>
+<p>A naive approach might involve feeding raw data into a model. However, <strong>domain knowledge</strong> suggests that combining certain features might improve predictive power.</p>
+<h3>Feature Interaction: Creating a New Feature</h3>
+<p>By <strong>crossing features</strong>, we can create <strong>new, meaningful variables</strong>. Here, we introduce a new feature:</p>
+df['gpa_project_ratio'] = df['gpa'] / (df['project_count'] + 1)  # Avoid division by zero
+<p>This <strong>GPA-to-Project ratio</strong> captures how well students balance academics with practical experience.</p>
+<h3>Evaluating Feature Importance</h3>
+<p>To determine if our new feature is valuable, we can use <strong>Random Forest feature importance</strong>:</p>
+from sklearn.ensemble import RandomForestClassifier
+
+X = df.drop(columns=['placement_status'])  # Exclude target variable
+y = df['placement_status']
+
+model = RandomForestClassifier()
+model.fit(X, y)
+
+# Get feature importance scores
+importances = pd.Series(model.feature_importances_, index=X.columns).sort_values(ascending=False)
+print(importances)
+<p>If the <code>gpa_project_ratio</code> has high importance, we keep it. Otherwise, we remove it.</p>
+<h2>Final Thoughts</h2>
+<p>Through this journey, Iâ€™ve come to appreciate <strong>data preprocessing, normalization, and feature engineering</strong> as critical steps in model performance. While model selection is important, <strong>garbage in, garbage out</strong> still appliesâ€”quality data leads to quality models.</p>
+```

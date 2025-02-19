@@ -1,39 +1,34 @@
-# **Beyond Model Selection: Key Insights from My Machine Learning Journey**  
+While participating in the four-month-long free online course in Machine Learning Zoomcamp delivered by DataTalks, I learned that as an ML practitioner, a significant portion of the work is not just about selecting the right model but about constructing datasets and performing feature engineering.
 
-While participating in the four-month-long free online course in **Machine Learning Zoomcamp** delivered by **DataTalks**, I learned that a significant portion of an ML practitioner’s work isn’t just selecting the right model—it’s **constructing datasets and performing feature engineering**.  
+The process of exploring, describing, and analyzing datasets reveals inadequacies in data quality, which must be addressed before training a model. Nothing beats a high-quality dataset.
 
-The process of **exploring, describing, and analyzing datasets** reveals **inadequacies in data quality**, which must be addressed before training a model. Nothing beats a high-quality dataset.  
+During the course, model selection depended on the nature of the target variable:
+	•	Regression models predicted continuous values (e.g., house prices).
+	•	Classification models determined categorical outcomes (e.g., whether a student gets admitted to college based on academic and extracurricular characteristics).
+	•	Neural networks tackled more complex tasks, such as image classification.
 
-During the course, model selection depended on the **nature of the target variable**:  
+We explored models such as logistic regression, decision trees, random forests, gradient boosting, and XGBoost, fine-tuning their parameters to improve performance.
 
-- **Regression models** predicted continuous values (e.g., house prices).  
-- **Classification models** determined categorical outcomes (e.g., whether a student gets admitted to college based on academic and extracurricular characteristics).  
-- **Neural networks** tackled more complex tasks, such as **image classification**.  
+However, two key aspects stood out to me beyond the core curriculum, which I want to highlight:
 
-We explored models such as **logistic regression, decision trees, random forests, gradient boosting, and XGBoost**, fine-tuning their parameters to improve performance.  
+1. The Importance of Normalization in Model Performance
 
-However, two key aspects stood out to me beyond the core curriculum, which I want to highlight:  
+During training, I realized that not all models require feature scaling. However, for some models, failing to normalize the data can lead to poor performance or misleading coefficients.
 
-## **1. The Importance of Normalization in Model Performance**  
+When Should You Normalize Data?
 
-During training, I realized that **not all models require feature scaling**. However, for some models, failing to normalize the data can **lead to poor performance or misleading coefficients**.  
+Feature scaling (such as standardization or min-max scaling) is especially important when using:
+✅ K-Nearest Neighbors (KNN) – Distance-based models can be skewed by unscaled features.
+✅ Support Vector Machines (SVM) – A large range of feature values affects how the margin is calculated.
+✅ Neural Networks – Can struggle with unnormalized inputs, leading to slower convergence.
+✅ Linear & Logistic Regression (with Regularization) – Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.
 
-### **When Should You Normalize Data?**  
+Meanwhile, models such as decision trees, random forests, and gradient boosting do not require normalization since they split data based on feature values, not distances.
 
-Feature scaling (such as standardization or min-max scaling) is especially important when using:  
+Code Example: The Impact of Normalization on Logistic Regression
 
-✅ **K-Nearest Neighbors (KNN)** – Distance-based models can be skewed by unscaled features.  
-✅ **Support Vector Machines (SVM)** – A large range of feature values affects how the margin is calculated.  
-✅ **Neural Networks** – Can struggle with unnormalized inputs, leading to slower convergence.  
-✅ **Linear & Logistic Regression (with Regularization)** – Regularization techniques (e.g., Lasso, Ridge) assume features are on the same scale.  
+Below is a simple example demonstrating how failing to normalize data can impact logistic regression performance when regularization is applied.
 
-Meanwhile, models such as **decision trees, random forests, and gradient boosting** do **not** require normalization since they split data based on feature values, not distances.  
-
-### **Code Example: The Impact of Normalization on Logistic Regression**  
-
-Below is a simple example demonstrating **how failing to normalize data can impact logistic regression performance** when regularization is applied.  
-
-```python
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -77,7 +72,6 @@ This experiment highlights why normalization is critical for models using regula
 Another major takeaway was feature selection—how do you determine which features to include in a model?
 
 While it might seem logical to include as many features as possible, irrelevant or redundant features can degrade model performance. Instead, it’s useful to:
-
 ✅ Start with feature importance scores (e.g., from decision trees).
 ✅ Train a baseline model with the most important features.
 ✅ Gradually add features and track performance metrics (e.g., ROC AUC, Recall, Precision).
@@ -118,6 +112,6 @@ print(importances)
 
 If the gpa_project_ratio has high importance, we keep it. Otherwise, we remove it.
 
-Final Thoughts
+# Final Thoughts
 
 Through this journey, I’ve come to appreciate data preprocessing, normalization, and feature engineering as critical steps in model performance. While model selection is important, garbage in, garbage out still applies—quality data leads to quality models.
